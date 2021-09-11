@@ -22,4 +22,43 @@ class MyUsersController extends ControllerBase {
     return $build;
   }
 
+  /**
+   * Consult register users
+   * @return array
+   */
+  public function consult(){
+    $build['content'] = [
+      '#type' => 'item',
+      '#markup' => $this->t('Consult'),
+    ];
+
+    return $build;
+  }
+
+  /**
+   * Register register users
+   * @return array
+   */
+  public function register(){
+    $build['content'] = [
+      '#type' => 'item',
+      '#markup' => $this->t('Register'),
+    ];
+
+    return $build;
+  }
+
+  /**
+   * Import register users
+   * @return array
+   */
+  public function import(){
+    $build['content'] = [
+      '#type' => 'item',
+      '#markup' => $this->t('Import'),
+    ];
+
+    return $build;
+  }
+
 }

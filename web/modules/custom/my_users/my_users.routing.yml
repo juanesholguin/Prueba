@@ -1,7 +1,24 @@
-my_users.example:
-  path: '/my-users/example'
+#Route to register users
+my_users.register:
+  path: '/my-users/register'
   defaults:
-    _title: 'Example'
-    _controller: '\Drupal\my_users\Controller\MyUsersController::build'
+    _title: 'Register users'
+    _controller: '\Drupal\my_users\Controller\MyUsersController::register'
   requirements:
-    _permission: 'access content'
+    _permission: 'consult my_users'
+#Route to consult users
+my_users.consult:
+  path: '/my-users/consult'
+  defaults:
+    _title: 'Consult users'
+    _controller: '\Drupal\my_users\Controller\MyUsersController::consult'
+  requirements:
+    _permission: 'consult my_users'
+#Route to import users
+my_users.import:
+  path: '/my-users/import'
+  defaults:
+    _title: 'Import users'
+    _controller: '\Drupal\my_users\Controller\MyUsersController::import'
+  requirements:
+    _permission: 'consult my_users'

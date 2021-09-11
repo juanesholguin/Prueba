@@ -1,4 +1,9 @@
-administer my_users configuration:
-  title: 'Administer my_users configuration'
-  description: 'Optional description.'
-  restrict access: true
+register my_users:
+  title: 'Register user'
+  description: 'Register a new user'
+consult my_users:
+  title: 'Consult users'
+  description: 'Consult registered users'
+import my_users:
+  title: 'Import users'
+  description: 'Import users via file'
