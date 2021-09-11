@@ -1,0 +1,43 @@
+<?php
+
+function my_users_schema() {
+
+  $schema['myusers'] = array(
+    'description' => 'The base table for myusers.',
+    'fields' => array(
+      'id' => array(
+        'description' => 'The primary identifier for a node.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
+      'nombre' => array(
+        'description' => 'The type of this nombre.',
+        'type' => 'varchar',
+        'length' => 252,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+    ),
+    'primary key' => array(
+      'id',
+    ),
+  );
+
+  return $schema;
+}
+
+
+function my_users_install() {
+  $database = \Drupal::database();
+  $values = [
+    [
+      'nombre' => 'Juanes',
+    ],
+  ];
+  $query = $database->insert('myusers')->fields(['nombre']);
+  foreach ($values as $record) {
+    $query->values($record);
+  }
+  $query->execute();
+}
