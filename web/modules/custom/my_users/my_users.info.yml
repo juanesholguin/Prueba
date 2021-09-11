@@ -1,0 +1,6 @@
+name: My users
+type: module
+description: Module for custom configuration of users
+package: Custom
+core: 8.x
+core_version_requirement: ^8 || ^9

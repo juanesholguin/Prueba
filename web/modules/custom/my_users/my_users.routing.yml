@@ -1,0 +1,7 @@
+my_users.example:
+  path: '/my-users/example'
+  defaults:
+    _title: 'Example'
+    _controller: '\Drupal\my_users\Controller\MyUsersController::build'
+  requirements:
+    _permission: 'access content'

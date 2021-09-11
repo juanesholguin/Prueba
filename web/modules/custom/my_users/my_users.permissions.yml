@@ -1,0 +1,4 @@
+administer my_users configuration:
+  title: 'Administer my_users configuration'
+  description: 'Optional description.'
+  restrict access: true
