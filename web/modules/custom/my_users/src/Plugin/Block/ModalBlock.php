@@ -26,7 +26,7 @@ class ModalBlock extends BlockBase
     $query->orderBy('id', 'DESC');
     $query->range(0, 1);
     $result = $query->execute()->fetchAll();
-    $id = 0;
+    $id = 1;
 
     if ($result) {
       $id = $result[0]->id + 1;
