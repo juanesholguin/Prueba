@@ -19,7 +19,7 @@ jQuery(document).ready(function () {
   // }
 
   (function($) {
-    $.fn.myModal = function(data) {
+    $.fn.myModal = function() {
       $('#myModal').modal('show');
     };
   })(jQuery);

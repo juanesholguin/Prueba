@@ -13,7 +13,8 @@ use Drupal\Core\Block\BlockBase;
  *   category = @Translation("My users")
  * )
  */
-class ModalBlock extends BlockBase {
+class ModalBlock extends BlockBase
+{
 
   /**
    * {@inheritdoc}
@@ -22,19 +23,25 @@ class ModalBlock extends BlockBase {
 
     $query = \Drupal::database()->select('myusers', 'u');
     $query->fields('u');
-    $query->range(0,1);
+    $query->orderBy('id', 'DESC');
+    $query->range(0, 1);
     $result = $query->execute()->fetchAll();
-    $id = "";
+    $id = 0;
 
-    if ($result){
-      $id = $result[0]->id;
+    if ($result) {
+      $id = $result[0]->id + 1;
     }
+
     $build = [
       '#theme' => 'modal',
       '#title' => 'User saved',
-      '#description' => 'Modal window to display saved user id'
+      '#description' => 'Modal window to display saved user id',
+      '#cache' => [
+        'max-age' => 0,
+      ]
     ];
     $build['#id'] = $id;
+
     return $build;
   }
 

@@ -60,22 +60,24 @@ class RegisterUser extends FormBase
   public function callbackUsers(array $form, FormStateInterface $form_state) {
     /* attached libraries*/
     $ajax_response = new AjaxResponse();
+    $id = $form_state->getValue('id');
     $name = $form_state->getValue('name');
     $characters = $this->validateCharacters($name);
 
+
     if ($characters) {
-      $names = $this->getNames($name);
-      if ($names){
-        $ajax_response->addCommand(new HtmlCommand("#nameUser",  'The user ' . $names . ' already exists'));
-      }else{
+      $names_databases = $this->getNames($name);
+      if ($names_databases) {
+        $ajax_response->addCommand(new HtmlCommand("#nameUser", 'The user ' . $names_databases . ' already exists'));
+      } else {
         $values = [
           'nombre' => $name,
         ];
         \Drupal::database()->insert('myusers')->fields($values)->execute();
         $ajax_response->addCommand(new HtmlCommand("#nameUser", ""));
-        $ajax_response->addCommand(new InvokeCommand(NULL, 'myModal', ['some Var']));
+        $ajax_response->addCommand(new InvokeCommand(NULL, 'myModal'));
       }
-    }else{
+    } else {
       $ajax_response->addCommand(new HtmlCommand("#nameUser", "The name must have more than 5 letters"));
     }
 
@@ -92,19 +94,20 @@ class RegisterUser extends FormBase
     return $correct;
   }
 
-  public function getNames($name){
-    $name_user ="";
+  public function getNames($name) {
+    $name_user = "";
     $query = \Drupal::database()->select('myusers', 'u');
     $query->fields('u');
     $query->condition('u.nombre', $name);
     $result = $query->execute()->fetchAll();
 
-    if ($result){
+    if ($result) {
       $name_user = $result[0]->nombre;
     }
 
     return $name_user;
   }
+
   /**
    * {@inheritdoc}
    */
