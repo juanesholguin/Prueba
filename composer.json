@@ -21,7 +21,9 @@
         "drupal/core-project-message": "^9.2",
         "drupal/core-recommended": "^9.2",
         "drupal/devel": "^4.1",
-        "drush/drush": "^10.6"
+        "drush/drush": "^10.6",
+        "phpoffice/phpexcel": "^1.8",
+        "phpoffice/phpspreadsheet": "^1.18"
     },
     "conflict": {
         "drupal/drupal": "*"
