@@ -3,9 +3,9 @@ my_users.register:
   path: '/my-users/register'
   defaults:
     _title: 'Register users'
-    _controller: '\Drupal\my_users\Controller\MyUsersController::register'
+    _form: 'Drupal\my_users\Form\RegisterUser'
   requirements:
-    _permission: 'consult my_users'
+    _permission: 'register my_users'
 #Route to consult users
 my_users.consult:
   path: '/my-users/consult'
@@ -21,4 +21,4 @@ my_users.import:
     _title: 'Import users'
     _controller: '\Drupal\my_users\Controller\MyUsersController::import'
   requirements:
-    _permission: 'consult my_users'
+    _permission: 'import my_users'

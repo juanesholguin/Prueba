@@ -1,0 +1,25 @@
+uuid: b6c9cbfe-15b9-4d0f-b946-e95fe91a4a47
+langcode: en
+status: true
+dependencies:
+  module:
+    - my_users
+    - system
+  theme:
+    - bartik
+id: modalblock
+theme: bartik
+region: content
+weight: 0
+provider: null
+plugin: my_users_example
+settings:
+  id: my_users_example
+  label: 'Modal block'
+  provider: my_users
+  label_display: visible
+visibility:
+  request_path:
+    id: request_path
+    pages: /my-users/register
+    negate: false
