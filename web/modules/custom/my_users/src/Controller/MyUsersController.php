@@ -96,8 +96,6 @@ class MyUsersController extends ControllerBase
    */
   public function import($file = null) {
     $input_fileName = \Drupal::service('file_system')->realpath('public://' . $file);
-
-
     $operations[] = array(array($this, 'loadFile'), array($input_fileName));
     $batch = array(
       'title' => t('Importing users'),
@@ -113,50 +111,37 @@ class MyUsersController extends ControllerBase
 
   public function loadFile($input_fileName) {
     $spread_sheet = IOFactory::load($input_fileName);
-
     $sheet_data = $spread_sheet->getActiveSheet();
 
     foreach ($sheet_data->getRowIterator() as $row) {
-      $operations[] = array(array($this, 'saveUsers'), array($row));
+      $cell_iterator = $row->getCellIterator();
+      $cell_iterator->setIterateOnlyExistingCells(FALSE);
+      $cells = [];
+      foreach ($cell_iterator as $cell) {
+        $cells[] = $cell->getValue();
+      }
+      $rows[] = $cells;
+
+      foreach($rows as $key =>$item){
+        if ($key !== 0){
+          $values = [
+            'nombre' => $item[0]
+          ];
+        }
+      }
+      if ($values){
+        \Drupal::database()->insert('myusers')->fields($values)->execute();
+      }
     }
-    $batch = array(
-      'title' => t('Importing users'),
-      'operations' => $operations,
-      'finished' => array($this, 'finishBatch'),
-    );
-    batch_set($batch);
-
-    return batch_process("/users/import");
-  }
-
-  public function saveUsers($row) {
-    $cell_iterator = $row->getCellIterator();
-    $cell_iterator->setIterateOnlyExistingCells(FALSE);
-    $cells = [];
-    foreach ($cell_iterator as $cell) {
-      $cells[] = $cell->getValue();
-    }
-    $rows[] = $cells;
-
-    foreach($rows as $row){
-      $values = [
-        'nombre' => $row[0]
-      ];
-      \Drupal::database()->insert('myusers')->fields($values)->execute();
-    }
-
     $context['message'] = "Importing users";
   }
 
   public function finishBatch($success, $results, $operations) {
-    dump($success);
-    dump($results);
-    dump($operations);
-    die();
+
     if ($success) {
-      \Drupal::messenger()->addMessage('Sincronización finalizada');
+      \Drupal::messenger()->addMessage('Import completed');
     } else {
-      \Drupal::messenger()->addError('Error en la sincronización, verique el log.'.$success);
+      \Drupal::messenger()->addError('Import failed');
     }
   }
 
