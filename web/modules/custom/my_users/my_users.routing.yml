@@ -22,9 +22,17 @@ my_users.export:
     _controller: '\Drupal\my_users\Controller\MyUsersController::export'
   requirements:
     _permission: 'consult my_users'
-#Route to import users
+#Route to import users form
 my_users.import:
   path: '/users/import'
+  defaults:
+    _title: 'Import users'
+    _form: 'Drupal\my_users\Form\ImportUsers'
+  requirements:
+    _permission: 'import my_users'
+#Route to import users controller
+my_users.import.controller:
+  path: '/users/import-controller/{file}'
   defaults:
     _title: 'Import users'
     _controller: '\Drupal\my_users\Controller\MyUsersController::import'

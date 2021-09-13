@@ -42,7 +42,7 @@ class MyUsersController extends ControllerBase
       '#type' => 'pager'
     );
 
-    $url = Url::fromUri($base_url.'/users/export');
+    $url = Url::fromUri($base_url . '/users/export');
     $link = Link::fromTextAndUrl('Dowload', $url);
 
     $link = $link->toRenderable();
@@ -71,8 +71,8 @@ class MyUsersController extends ControllerBase
     $key = 2;
     for ($i = 1; $i <= count($result); $i++) {
       $spreadsheet->setActiveSheetIndex(0)
-        ->setCellValue('A1' , 'Id')
-        ->setCellValue('B1' , 'Nombres')
+        ->setCellValue('A1', 'Id')
+        ->setCellValue('B1', 'Nombres')
         ->setCellValue('A' . $key, '' . $result[$i - 1]->id . '')
         ->setCellValue('B' . $key, '' . $result[$i - 1]->nombre . '');
       $key++;
@@ -94,17 +94,70 @@ class MyUsersController extends ControllerBase
    * Import register users
    * @return array
    */
-  public function import() {
-    $build['content'] = [
-      '#type' => 'item',
-      '#markup' => $this->t('Import'),
-    ];
+  public function import($file = null) {
+    $input_fileName = \Drupal::service('file_system')->realpath('public://' . $file);
 
-    return $build;
+
+    $operations[] = array(array($this, 'loadFile'), array($input_fileName));
+    $batch = array(
+      'title' => t('Importing users'),
+      'operations' => $operations,
+      'finished' => array($this, 'finishBatch'),
+    );
+
+    batch_set($batch);
+
+    return batch_process("/users/import");
+
   }
 
-  public function download() {
-    dump("entra");
-    $form_state['redirect'] = url('/users/export');
+  public function loadFile($input_fileName) {
+    $spread_sheet = IOFactory::load($input_fileName);
+
+    $sheet_data = $spread_sheet->getActiveSheet();
+
+    foreach ($sheet_data->getRowIterator() as $row) {
+      $operations[] = array(array($this, 'saveUsers'), array($row));
+    }
+    $batch = array(
+      'title' => t('Importing users'),
+      'operations' => $operations,
+      'finished' => array($this, 'finishBatch'),
+    );
+    batch_set($batch);
+
+    return batch_process("/users/import");
   }
+
+  public function saveUsers($row) {
+    $cell_iterator = $row->getCellIterator();
+    $cell_iterator->setIterateOnlyExistingCells(FALSE);
+    $cells = [];
+    foreach ($cell_iterator as $cell) {
+      $cells[] = $cell->getValue();
+    }
+    $rows[] = $cells;
+
+    foreach($rows as $row){
+      $values = [
+        'nombre' => $row[0]
+      ];
+      \Drupal::database()->insert('myusers')->fields($values)->execute();
+    }
+
+    $context['message'] = "Importing users";
+  }
+
+  public function finishBatch($success, $results, $operations) {
+    dump($success);
+    dump($results);
+    dump($operations);
+    die();
+    if ($success) {
+      \Drupal::messenger()->addMessage('Sincronización finalizada');
+    } else {
+      \Drupal::messenger()->addError('Error en la sincronización, verique el log.'.$success);
+    }
+  }
+
 }
