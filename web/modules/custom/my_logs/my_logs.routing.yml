@@ -1,0 +1,7 @@
+entity.my_logs.settings:
+  path: 'admin/structure/my-logs'
+  defaults:
+    _form: '\Drupal\my_logs\Form\MyLogsSettingsForm'
+    _title: 'My logs'
+  requirements:
+    _permission: 'administer my logs'

@@ -1,0 +1,5 @@
+my_logs.add_form:
+  route_name: entity.my_logs.add_form
+  title: 'Add my logs'
+  appears_on:
+    - entity.my_logs.collection

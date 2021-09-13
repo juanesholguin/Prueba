@@ -1,0 +1,10 @@
+entity.my_logs.settings:
+  title: My logs
+  description: Configure a My logs entity type
+  route_name:  entity.my_logs.settings
+  parent: system.admin_structure
+entity.my_logs.collection:
+  title: My logses
+  description: List of my logses
+  route_name: entity.my_logs.collection
+  parent: system.admin_content

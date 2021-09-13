@@ -1,0 +1,5 @@
+administer my logs:
+  title: 'Administer my logs settings'
+  restrict access: true
+access my logs overview:
+  title: 'Access my logs overview page'
