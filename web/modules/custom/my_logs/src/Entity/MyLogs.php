@@ -163,6 +163,22 @@ class MyLogs extends ContentEntityBase implements MyLogsInterface {
       ])
       ->setDisplayConfigurable('view', TRUE);
 
+    $fields['uuidUser'] = BaseFieldDefinition::create('string')
+      ->setLabel(t('Uid'))
+      ->setDescription(t('Uid for user'))
+      ->setRequired(TRUE)
+      ->setSetting('max_length', 255)
+      ->setDisplayOptions('form', [
+        'type' => 'string_textfield',
+        'weight' => -5,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayOptions('view', [
+        'type' => 'string',
+        'weight' => -5,
+      ])
+      ->setDisplayConfigurable('view', TRUE);
+
     $fields['Type'] = BaseFieldDefinition::create("list_string")
       ->setDefaultValue([['value' => 'Login'], ['value' => 'Registration']])
       ->setSettings([

@@ -1,0 +1,66 @@
+<?php
+
+use \Drupal\Core\Form\FormStateInterface;
+use \Drupal\user\Entity\User;
+
+/**
+ * @file
+ * Primary module hooks for My general module.
+ *
+ * @DCG
+ * This file is no longer required in Drupal 8.
+ * @see https://www.drupal.org/node/2217931
+ */
+
+/**
+ * Implements hook_form_alter().
+ */
+function my_general_form_alter(&$form, FormStateInterface $form_state, $form_id) {
+  if ($form_id == 'user_login_form') {
+    $form['actions']['submit']['#submit'][] = 'customSubmit';
+
+  }
+}
+
+/**
+ * Implements hook_entity_presave().
+ */
+function my_general_entity_presave(\Drupal\Core\Entity\EntityInterface $entity) {
+  //validate if entity is user
+  if ($entity->bundle() == "user") {
+    $uid = $entity->uuid();
+    createLogs($user = null, $uid);
+  }
+}
+
+function customSubmit(&$form, FormStateInterface $form_state) {
+  $name = $form_state->getValue('name');
+  $pass = $form_state->getValue('pass');
+  $uid = \Drupal::service('user.auth')->authenticate($name, $pass);
+  $user = User::load($uid);
+  createLogs($user);
+  user_login_finalize($user);
+}
+
+function createLogs($user = null, $uid = null) {
+  $ip = \Drupal::request()->getClientIp();
+
+  if ($user) {
+    $id = $user->id();
+    $my_logs = \Drupal::entityTypeManager()->getStorage('my_logs')->create([
+      'ip' => $ip,
+      'uid' => $id,
+      'uuidUser' => $user->uuid(),
+      'type' => ['value' => 'registration'],
+    ]);
+  } else if ($uid) {
+    $id = $uid;
+    $my_logs = \Drupal::entityTypeManager()->getStorage('my_logs')->create([
+      'ip' => $ip,
+      'uuidUser' => $id,
+      'Type' => ['registration'],
+    ]);
+  }
+  $my_logs->save();
+}
+
